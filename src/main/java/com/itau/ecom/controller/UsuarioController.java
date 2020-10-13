@@ -23,14 +23,14 @@ public class UsuarioController {
 	//1
 	private UsuarioService usuarioService;
 	
-	@PostMapping("/v1/usuario")
+	@PostMapping("/v1/usuarios")
 	@Transactional
 		//1
 	private ResponseEntity<?> NovoUsuario(@RequestBody @Valid UsuarioRequest request, UriComponentsBuilder builder){
 		Long idUsuario = usuarioService.novoUsuario(request);
 
 		//1
-		URI enderecoConsulta = builder.path("/v1/autores/{id}").build(idUsuario);
+		URI enderecoConsulta = builder.path("/v1/usuarios/{id}").build(idUsuario);
 		
 		return ResponseEntity.created(enderecoConsulta).build();
 	}
