@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.http.HttpStatus;
 
 import com.itau.ecom.exception.ApiErroException;
@@ -22,6 +23,7 @@ public class Categoria {
 	private Long id;
 	
 	@NotBlank
+	@UniqueElements
 	private String nome;
 	
 	@ManyToOne
@@ -32,20 +34,17 @@ public class Categoria {
 	
 	public Categoria(@NotBlank String nome, Long idCategoriaMae, CategoriaJpaRepository categoriaJpaRepository) {
 		super();
-		if(categoriaJpaRepository.findByNome(nome).isPresent()) {
-			throw new ApiErroException(HttpStatus.UNPROCESSABLE_ENTITY, "Já existe uma categoria com este nome.");
-		}
 		this.nome = nome;
 		
 		if(idCategoriaMae != null) {
 			Optional<Categoria>possivelCategoriaMae = categoriaJpaRepository.findById(idCategoriaMae);
 			if(possivelCategoriaMae.isPresent()) {
-				categoriaMae = possivelCategoriaMae.get();
+				this.categoriaMae = possivelCategoriaMae.get();
 			}else {
 				throw new ApiErroException(HttpStatus.UNPROCESSABLE_ENTITY, "Categoria mãe não cadastrada.");
 			}
 		}else {
-			categoriaMae = null;
+			this.categoriaMae = null;
 		}
 	}
 

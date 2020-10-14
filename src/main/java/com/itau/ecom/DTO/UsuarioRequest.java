@@ -7,15 +7,16 @@ import org.hibernate.validator.constraints.Length;
 
 import com.itau.ecom.entity.Usuario;
 import com.itau.ecom.repository.UsuarioJpaRepository;
+import com.itau.ecom.validator.UniqueValue;
 
 //3
 public class UsuarioRequest {
 
 	@NotBlank	
 	@Email
+	@UniqueValue(domainClass = Usuario.class, fieldName = "email")
 	private String email;
 	
-	@NotBlank
 	@NotBlank
 	@Length(min=6)
 	private String senha;
@@ -24,6 +25,10 @@ public class UsuarioRequest {
 		super();
 		this.email = email;
 		this.senha = senha;
+	}
+
+	public UsuarioRequest() {
+		super();
 	}
 
 	public String getEmail() {
