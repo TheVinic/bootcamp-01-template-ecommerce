@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -12,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
@@ -62,6 +65,9 @@ public class Produto {
 	@Temporal(TemporalType.DATE)
 	private Date instanteCadastro;
 
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<ImagemProduto> imagens = new HashSet<>();
+
 	public Produto(@NotBlank String nome, @Positive BigDecimal valor, @PositiveOrZero Long quantidade,
 			@Size(min = 3) Set<Caracteristica> caracteristicas, @NotBlank @Size(max = 1000) String descricao,
 			Long idCategoria, Usuario usuario, EntityManager manager) {
@@ -81,8 +87,22 @@ public class Produto {
 		this.usuario = usuario;
 	}
 
+	@Deprecated
+	public Produto() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
+
+	public void associaImagens(Set<String> links) {
+		links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet());
+		this.imagens.addAll(imagens);
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	} 
 	
 }
