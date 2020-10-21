@@ -22,15 +22,15 @@ public class ImagemProduto {
 	@NotNull
 	@ManyToOne
 	private Produto produto;
+
+	@NotBlank
+	@URL
+	private String link;
 	
 	@Deprecated
 	public ImagemProduto() {
 		super();
 	}
-
-	@NotBlank
-	@URL
-	private String link;
 	
 	public ImagemProduto(@NotNull @Valid Produto produto, @NotBlank @URL String link) {
 		this.produto = produto;

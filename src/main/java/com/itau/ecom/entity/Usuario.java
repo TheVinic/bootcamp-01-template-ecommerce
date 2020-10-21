@@ -63,7 +63,6 @@ public class Usuario {
 
 	@Deprecated
 	public Usuario() {
-		super();
 	}
 
 	public String getEmail() {

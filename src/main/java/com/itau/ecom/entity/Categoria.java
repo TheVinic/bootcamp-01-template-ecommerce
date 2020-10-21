@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.http.HttpStatus;
 
 import com.itau.ecom.exception.ApiErroException;
@@ -23,7 +22,6 @@ public class Categoria {
 	private Long id;
 	
 	@NotBlank
-	@UniqueElements
 	private String nome;
 	
 	@ManyToOne
