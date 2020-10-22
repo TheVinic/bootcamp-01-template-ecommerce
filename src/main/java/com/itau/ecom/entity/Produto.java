@@ -70,6 +70,9 @@ public class Produto {
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<Opiniao> opinioes = new HashSet<>();
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<Pergunta> perguntas = new HashSet<>();
 
 	public Produto(@NotBlank String nome, @Positive BigDecimal valor, @PositiveOrZero Long quantidade,
 			@Size(min = 3) Set<Caracteristica> caracteristicas, @NotBlank @Size(max = 1000) String descricao,
@@ -99,8 +102,15 @@ public class Produto {
 		return id;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public Set<Opiniao> getOpinioes() {
+		return opinioes;
+	}
+
 	public void associaImagens(Set<String> links) {
-		
 		this.imagens.addAll(links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet()));
 	}
 
@@ -108,12 +118,8 @@ public class Produto {
 		this.opinioes.add(opiniao);
 	} 
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public Set<Opiniao> getOpinioes() {
-		return opinioes;
+	public void associaPergunta(Pergunta pergunta) {
+		this.perguntas.add(pergunta);
 	}
 	
 }
