@@ -1,19 +1,19 @@
 package com.itau.ecom.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
+
+import com.itau.ecom.DTO.PerguntaResponse;
 
 @Entity
 public class Pergunta {
@@ -26,8 +26,7 @@ public class Pergunta {
 	private String titulo;
 	
 	@CreatedDate
-	@Temporal(TemporalType.DATE)
-	private Date instanteCriacao;
+	private LocalDateTime instanteCriacao = LocalDateTime.now();
 	
 	@NotNull
 	@Valid
@@ -45,7 +44,6 @@ public class Pergunta {
 
 	public Pergunta(@NotBlank String titulo, @NotNull Produto produto, @NotNull Usuario usuario) {
 		this.titulo = titulo;
-		this.instanteCriacao = new Date();
 		this.usuario = usuario;
 		this.produto = produto;
 	}
@@ -58,7 +56,7 @@ public class Pergunta {
 		return titulo;
 	}
 
-	public Date getInstanteCriacao() {
+	public LocalDateTime getInstanteCriacao() {
 		return instanteCriacao;
 	}
 
@@ -68,6 +66,10 @@ public class Pergunta {
 
 	public Produto getProduto() {
 		return produto;
+	}
+
+	public PerguntaResponse toResponse() {
+		return new PerguntaResponse(id, titulo, instanteCriacao);
 	}
 	
 }

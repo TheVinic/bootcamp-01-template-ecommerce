@@ -3,6 +3,7 @@ package com.itau.ecom.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.http.HttpStatus;
 
+import com.itau.ecom.DTO.DetalheProdutoResponse;
 import com.itau.ecom.exception.ApiErroException;
 import com.sun.istack.NotNull;
 
@@ -33,44 +35,44 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotBlank
 	private String nome;
-	
+
 	@NotNull
 	@Positive
 	private BigDecimal valor;
-	
+
 	@NotNull
 	@PositiveOrZero
 	private Long quantidade;
-	
-	@Size(min=3)
+
+	@Size(min = 3)
 	@ElementCollection
 	private Set<Caracteristica> caracteristicas = new HashSet<>();
-	
+
 	@NotBlank
 	@Size(max = 1000)
 	private String descricao;
-	
+
 	@NotNull
 	@ManyToOne
 	private Categoria categoria;
-	
+
 	@NotNull
 	@ManyToOne
 	private Usuario usuario;
-	
+
 	@NotNull
 	@Temporal(TemporalType.DATE)
 	private Date instanteCadastro;
 
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<ImagemProduto> imagens = new HashSet<>();
-	
+
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<Opiniao> opinioes = new HashSet<>();
-	
+
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<Pergunta> perguntas = new HashSet<>();
 
@@ -78,9 +80,9 @@ public class Produto {
 			@Size(min = 3) Set<Caracteristica> caracteristicas, @NotBlank @Size(max = 1000) String descricao,
 			Long idCategoria, Usuario usuario, EntityManager manager) {
 		super();
-		
+
 		Categoria possivelCategoria = manager.find(Categoria.class, idCategoria);
-		if(possivelCategoria == null) {
+		if (possivelCategoria == null) {
 			throw new ApiErroException(HttpStatus.BAD_REQUEST, "Categoria não cadastrada");
 		}
 		this.categoria = possivelCategoria;
@@ -116,10 +118,34 @@ public class Produto {
 
 	public void associaOpiniao(Opiniao opiniao) {
 		this.opinioes.add(opiniao);
-	} 
+	}
 
 	public void associaPergunta(Pergunta pergunta) {
 		this.perguntas.add(pergunta);
 	}
-	
+
+	public DetalheProdutoResponse toDetalheResponse() {
+		return new DetalheProdutoResponse(this.imagens, this.nome, this.valor, this.caracteristicas, this.descricao,
+				calculaNotaMedia(), calculaTotalNotas(), this.opinioes, this.perguntas);
+	}
+
+	private Integer calculaTotalNotas() {
+		return opinioes.size();
+	}
+
+	private BigDecimal calculaNotaMedia() {
+
+		if (calculaTotalNotas() != 0) {
+
+			Integer notas = 0;
+			Iterator<Opiniao> opiniaoAsIterator = opinioes.iterator();
+			while (opiniaoAsIterator.hasNext()) {
+				notas += opiniaoAsIterator.next().getNota();
+			}
+
+			return new BigDecimal((float) notas / calculaTotalNotas());
+		}
+		return null;
+	}
+
 }

@@ -12,11 +12,11 @@ public class CaracteristicaRequest {
 	private String nome;
 	
 	@NotBlank
-	@JsonProperty(value="valor")
-	private String valor;
+	@JsonProperty(value="descricao")
+	private String descricao;
 
 	public Caracteristica toModel() {
-		return new Caracteristica(nome, valor);
+		return new Caracteristica(nome, descricao);
 	}
 	
 }

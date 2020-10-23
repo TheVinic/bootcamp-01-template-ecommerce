@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.URL;
 
+import com.itau.ecom.DTO.ImagemProdutoResponse;
+
 @Entity
 public class ImagemProduto {
 
@@ -35,6 +37,10 @@ public class ImagemProduto {
 	public ImagemProduto(@NotNull @Valid Produto produto, @NotBlank @URL String link) {
 		this.produto = produto;
 		this.link = link;
+	}
+
+	public ImagemProdutoResponse toResponse() {
+		return new ImagemProdutoResponse(id, link);
 	}
 
 }

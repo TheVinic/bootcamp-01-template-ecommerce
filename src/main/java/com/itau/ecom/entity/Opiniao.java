@@ -11,6 +11,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.itau.ecom.DTO.OpiniaoResponse;
+
 @Entity
 public class Opiniao {
 
@@ -54,6 +56,30 @@ public class Opiniao {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Integer getNota() {
+		return nota;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public OpiniaoResponse toResponse() {
+		return new OpiniaoResponse(id, nota, titulo, descricao);
 	}
 
 }

@@ -10,12 +10,14 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.itau.ecom.DTO.DetalheProdutoResponse;
 import com.itau.ecom.DTO.ImagensRequest;
 import com.itau.ecom.DTO.ProdutoRequest;
 import com.itau.ecom.entity.Produto;
@@ -59,6 +61,19 @@ public class ProdutoController {
 		manager.merge(produto);
 		
 		return ResponseEntity.ok(links);
+		
+	}
+	
+	@GetMapping("/v1/produtos/{id}")
+	public ResponseEntity<?> DetalhesPedido (@PathVariable("id") Long id){
+		
+		DetalheProdutoResponse response = produtoService.detalheProduto(id);
+		
+		if (response == null) {
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok(response);
+		}
 		
 	}
 	

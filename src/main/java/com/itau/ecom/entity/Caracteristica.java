@@ -3,6 +3,8 @@ package com.itau.ecom.entity;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 
+import com.itau.ecom.DTO.CaracteristicaResponse;
+
 @Embeddable
 public class Caracteristica {
 
@@ -10,14 +12,18 @@ public class Caracteristica {
 	private String nome;
 	
 	@NotBlank
-	private String valor;
+	private String descricao;
 
-	public Caracteristica(@NotBlank String nome, @NotBlank String valor) {
+	public Caracteristica(@NotBlank String nome, @NotBlank String descricao) {
 		this.nome = nome;
-		this.valor = valor;
+		this.descricao = descricao;
 	}
 	
 	@Deprecated
 	public Caracteristica() {}
+
+	public CaracteristicaResponse toResponse() {
+		return new CaracteristicaResponse(nome, descricao);
+	}
 	
 }

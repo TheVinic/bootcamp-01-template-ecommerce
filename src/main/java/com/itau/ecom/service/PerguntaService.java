@@ -29,9 +29,6 @@ public class PerguntaService {
 		produto.associaPergunta(pergunta);
 
 		manager.merge(produto);
-
-		System.out.println("Email enviado");
-		
 	}
 
 }
