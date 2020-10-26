@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -27,7 +28,6 @@ import org.springframework.http.HttpStatus;
 
 import com.itau.ecom.DTO.DetalheProdutoResponse;
 import com.itau.ecom.exception.ApiErroException;
-import com.sun.istack.NotNull;
 
 @Entity
 public class Produto {
@@ -146,6 +146,56 @@ public class Produto {
 			return new BigDecimal((float) notas / calculaTotalNotas());
 		}
 		return null;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public Long getQuantidade() {
+		return quantidade;
+	}
+
+	public Set<Caracteristica> getCaracteristicas() {
+		return caracteristicas;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public Date getInstanteCadastro() {
+		return instanteCadastro;
+	}
+
+	public Set<ImagemProduto> getImagens() {
+		return imagens;
+	}
+
+	public Set<Pergunta> getPerguntas() {
+		return perguntas;
+	}
+
+	public Produto diminuiEstoque(@NotNull Long quantidade, EntityManager manager) {
+		
+		if((this.quantidade - quantidade) <= 0)
+		{
+			throw new ApiErroException(HttpStatus.BAD_REQUEST, "Produto sem estoque para esta compra, produto possui " + this.quantidade + "em estoque.");
+		}
+		
+		this.quantidade -= quantidade;
+		
+		manager.merge(this);
+		
+		return this;
 	}
 
 }
